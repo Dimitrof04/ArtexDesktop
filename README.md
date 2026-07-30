@@ -26,7 +26,7 @@ Run the interactive installer script to set up everything automatically:
 
 ```bash
 sudo pacman -Syu --needed git
-git clone [https://github.com/Dimitrof04/Dimitrof04Desktop.git](https://github.com/Dimitrof04/Dimitrof04Desktop.git)
+git clone https://github.com/Dimitrof04/Dimitrof04Desktop.git
 cd Dimitrof04Desktop
 chmod +x install.sh
 ./install.sh

@@ -49,7 +49,7 @@ read -p "Select mode (1 or 2): " MODE_CHOICE
 case $MODE_CHOICE in
     2) IS_AUTO=false ;;
     *) IS_AUTO=true ;;
-es me ac
+esac
 
 # Função utilitária para copiar arquivos com permissão se em modo Manual
 copy_file() {
