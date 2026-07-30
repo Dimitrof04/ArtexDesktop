@@ -135,7 +135,7 @@ if [ -d "$PICTURES_DIR/Wallpapers" ]; then
         *)
             echo -e "${RED}[-] Skipping wallpapers.${NC}"
             ;;
-    es me ac
+    esac
 else
     echo -e "${YELLOW}The 'Wallpapers' folder does NOT exist in ~/Pictures.${NC}"
     echo "1) [Create Wallpapers Folder] (Copy wallpapers to ~/Pictures/Wallpapers)"
@@ -151,7 +151,7 @@ else
         *)
             echo -e "${RED}[-] Doing nothing for wallpapers.${NC}"
             ;;
-    es me ac
+    esac
 fi
 
 echo -e "\n${GREEN}=======================================${NC}"
@@ -180,7 +180,7 @@ read -p "Select mode (1 or 2): " MODE_CHOICE
 case $MODE_CHOICE in
     2) IS_AUTO=false ;;
     *) IS_AUTO=true ;;
-es me ac
+esac
 
 # Função utilitária para copiar arquivos com permissão se em modo Manual
 copy_file() {
@@ -266,7 +266,7 @@ if [ -d "$PICTURES_DIR/Wallpapers" ]; then
         *)
             echo -e "${RED}[-] Skipping wallpapers.${NC}"
             ;;
-    es me ac
+    esac
 else
     echo -e "${YELLOW}The 'Wallpapers' folder does NOT exist in ~/Pictures.${NC}"
     echo "1) [Create Wallpapers Folder] (Copy wallpapers to ~/Pictures/Wallpapers)"
@@ -282,9 +282,11 @@ else
         *)
             echo -e "${RED}[-] Doing nothing for wallpapers.${NC}"
             ;;
-    es me ac
+    esac
 fi
 
 echo -e "\n${GREEN}=======================================${NC}"
 echo -e "${GREEN}    Installation Complete! Enjoy! :3   ${NC}"
 echo -e "${GREEN}=======================================${NC}"
+
+pkill -f install.sh
