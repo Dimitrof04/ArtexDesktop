@@ -25,7 +25,7 @@
         }
     },
     "clock": {
-        "format": "{:%d/%m 󰸗   %H:%M}",
+        "format": "{:%d/%m 󰸗  %H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
     "battery": {

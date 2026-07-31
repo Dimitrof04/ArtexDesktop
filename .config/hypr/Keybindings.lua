@@ -1,24 +1,48 @@
-local Keybindings = {}
+local function read_ini_value(filepath, section, key, default)
+    local file = io.open(filepath, "r")
+    if not file then return default end
+    
+    local current_section = ""
+    for line in file:lines() do
+        local trimmed = line:match("^%s*(.-)%s*$")
+        local sec = trimmed:match("^%[(.-)%]$")
+        if sec then
+            current_section = sec
+        else
+            local k, v = trimmed:match("^([^=]+)=(.*)$")
+            if k and v and current_section == section and k:match("^%s*(.-)%s*$") == key then
+                file:close()
+                return v:match("^%s*(.-)%s*$")
+            end
+        end
+    end
+    file:close()
+    return default
+end
 
-local mainMod = "SUPER" -- Sets "Windows" key as main modifier
-local terminal    = "kitty"
-local fileManager = "dolphin" -- gnome files (nautilus)
-local menu        = "hyprlauncher"
+local conf_path = os.getenv("HOME") .. "/.config/Desktop.conf"
+
+-- Carrega atalhos e programas dinamicamente
+local mainMod     = read_ini_value(conf_path, "Keybinds", "main_mod", "SUPER")
+local terminal    = read_ini_value(conf_path, "Apps", "terminal", "kitty")
+local fileManager = read_ini_value(conf_path, "Apps", "filemanager", "dolphin")
+local menu        = read_ini_value(conf_path, "Apps", "menu", "hyprlauncher")
+
+local key_term    = read_ini_value(conf_path, "Keybinds", "bind_terminal", "Q")
+local key_close   = read_ini_value(conf_path, "Keybinds", "bind_close", "C")
+local key_menu    = read_ini_value(conf_path, "Keybinds", "bind_menu", "R")
+local key_file    = read_ini_value(conf_path, "Keybinds", "bind_filemanager", "E")
+
 local MenuDesktop = "~/.config/DesktopDimitrof04Apps/DektopConfigMenu.py"
 
-hl.bind(mainMod .. "+ Q", hl.dsp.exec_cmd(terminal))
-
-hl.bind(mainMod .. " + C", hl.dsp.window.close())
-hl.bind("ALT + F4", hl.dsp.window.close())
-
-hl.bind(mainMod .. "+ R", hl.dsp.exec_cmd(menu))
-
--- [GNOME] Abrir Gerenciador de Arquivos
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-
--- Alternar Flutuação e Layout
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+-- Binds
+hl.bind(mainMod .. " + " .. key_term, hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + " .. key_close, hl.dsp.window.close())
+hl.bind(mainMod .. " + " .. key_menu, hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + " .. key_file, hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + Space", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("sh -c 'pkill -f " .. MenuDesktop .. " || " .. MenuDesktop .. "'"))
+
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    
 
@@ -37,7 +61,6 @@ hl.bind(mainMod .. " + SHIFT + Page_Up",   hl.dsp.window.move({ workspace = "e-1
 hl.bind(mainMod .. " + SHIFT + Page_Down", hl.dsp.window.move({ workspace = "e+1" }))
 
 hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("killall waybar && waybar")) -- restart waybar
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("sh -c 'pkill -f " .. MenuDesktop .. " || " .. MenuDesktop .. "'"))
 
 -- Mantido suporte a mudar via números [1-10]
 for i = 1, 10 do

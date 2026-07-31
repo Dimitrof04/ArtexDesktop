@@ -76,6 +76,13 @@ echo -e "\n${BLUE}--- Installing Packages ---${NC}"
 yay -Syu --noconfirm
 yay -S --needed hyprland waybar python-pyqt6 kitty awww hyprlock pavucontrol ttf-nerd-fonts-symbols dolphin --noconfirm
 
+# Atualizar repositórios e instalar pacotes do sistema
+sudo pacman -S --needed --noconfirm python python-pyqt6 networkmanager bluez bluez-utils wireplumber pipewire-audio lsb-release 
+
+# Habilitar serviços essenciais
+sudo systemctl enable --now NetworkManager
+sudo systemctl enable --now bluetooth
+
 # 2. Perguntar sobre Tools adicionais
 read -p "Install extra tools (cmatrix, cava, fastfetch, asciiquarium, pipes.sh, lavat, peaclock)? [Y/n]: " INSTALL_TOOLS
 INSTALL_TOOLS=${INSTALL_TOOLS:-Y}
