@@ -74,10 +74,10 @@ copy_file() {
 # 1. Copiar pacotes essenciais
 echo -e "\n${BLUE}--- Installing Packages ---${NC}"
 yay -Syu --noconfirm
-yay -S --needed hyprland waybar python-pyqt6 kitty awww hyprlock pavucontrol ttf-nerd-fonts-symbols dolphin --noconfirm
+yay -S --needed --noconfirm hyprland waybar python-pyqt6 kitty awww hyprlock pavucontrol ttf-nerd-fonts-symbols dolphin
 
 # Atualizar repositórios e instalar pacotes do sistema
-sudo pacman -S --needed --noconfirm python python-pyqt6 networkmanager bluez bluez-utils wireplumber pipewire-audio lsb-release 
+yay -S --needed --noconfirm python python-psutil python-pyqt6 networkmanager bluez bluez-utils wireplumber pipewire-audio lsb-release ttf-font-awesome ttf-nerd-fonts-symbols-common noto-fonts-emoji
 
 # Habilitar serviços essenciais
 sudo systemctl enable --now NetworkManager
@@ -160,6 +160,8 @@ else
             ;;
     esac
 fi
+
+sudo ln -s ~/.config/DesktopDimitrof04Apps/StartMenu.py /usr/local/bin/D04
 
 echo -e "\n${GREEN}=======================================${NC}"
 echo -e "${GREEN}    Installation Complete! Enjoy! :3   ${NC}"

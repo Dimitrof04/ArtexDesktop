@@ -23,6 +23,11 @@ class KeybindsTab(QWidget):
         self.app.app_terminal_input.setPlaceholderText("kitty")
         layout.addWidget(self.app.app_terminal_input)
 
+        layout.addWidget(QLabel("Navegardor"))
+        self.app.app_Browser_input = QLineEdit()
+        self.app.app_Browser_input.setPlaceholderText("firefox")
+        layout.addWidget(self.app.app_Browser_input)
+
         layout.addWidget(QLabel("Gerenciador de Arquivos:"))
         self.app.app_filemanager_input = QLineEdit()
         self.app.app_filemanager_input.setPlaceholderText("dolphin")
@@ -30,7 +35,7 @@ class KeybindsTab(QWidget):
 
         layout.addWidget(QLabel("Menu de Aplicativos / Launcher:"))
         self.app.app_menu_input = QLineEdit()
-        self.app.app_menu_input.setPlaceholderText("hyprlauncher")
+        self.app.app_menu_input.setPlaceholderText("ArtexDesktop --StartMenu")
         layout.addWidget(self.app.app_menu_input)
 
         layout.addWidget(QLabel("<h2>Combinações de Teclas</h2>"))
@@ -45,10 +50,20 @@ class KeybindsTab(QWidget):
         self.app.bind_terminal_input.setPlaceholderText("Q")
         layout.addWidget(self.app.bind_terminal_input)
 
+        layout.addWidget(QLabel("Atalho para Abrir o Navegador"))
+        self.app.bind_Browser_input = QLineEdit()
+        self.app.bind_Browser_input.setPlaceholderText("W")
+        layout.addWidget(self.app.bind_Browser_input)
+
         layout.addWidget(QLabel("Atalho para Fechar Janela:"))
         self.app.bind_close_input = QLineEdit()
         self.app.bind_close_input.setPlaceholderText("C")
         layout.addWidget(self.app.bind_close_input)
+
+        layout.addWidget(QLabel("Atalho para Fixar / Soltar Janela:"))
+        self.app.bind_ToggleFloting = QLineEdit()
+        self.app.bind_ToggleFloting.setPlaceholderText("Space")
+        layout.addWidget(self.app.bind_ToggleFloting)
 
         layout.addWidget(QLabel("Atalho para Abrir Menu:"))
         self.app.bind_menu_input = QLineEdit()

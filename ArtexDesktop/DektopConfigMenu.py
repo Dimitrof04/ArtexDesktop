@@ -6,24 +6,28 @@ import os
 from pathlib import Path
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QListWidget, QStackedWidget,
-    QHBoxLayout, QScrollArea
+    QHBoxLayout, QScrollArea, QMainWindow
 )
-from PyQt6.QtCore import QSettings
+from PyQt6.QtCore import QSettings, QTimer
 
 from Modules.DesktopMenu.Style import get_stylesheet
 from Modules.DesktopMenu.personalization import PersonalizationTab
 from Modules.DesktopMenu.keybinds import KeybindsTab
 from Modules.DesktopMenu.system_config import SystemConfigTab
 from Modules.DesktopMenu.info import InfoTab
+from Modules.theme_sync import set_system_theme # Já foi importado aqui!
 
+config_path = str(Path.home() / ".config" / "Desktop.conf")
 
 class SettingsApp(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Configurações do Desktop")
         self.resize(720, 420)
+        self.last_config_mtime = 0
+        self.setProperty("class", "hypr_menu")
 
-        config_path = str(Path.home() / ".config" / "Desktop.conf")
+        
         self.settings = QSettings(config_path, QSettings.Format.IniFormat)
 
         main_layout = QHBoxLayout(self)
@@ -59,6 +63,41 @@ class SettingsApp(QWidget):
 
         self.sidebar.setCurrentRow(0)
         self.load_settings()
+
+        # TIMER DE SINCRONIZAÇÃO EM TEMPO REAL
+        self.sync_timer = QTimer()
+        self.sync_timer.setInterval(200) # Checa a cada 300ms
+        self.sync_timer.timeout.connect(self.check_external_theme_change)
+        self.sync_timer.start()
+
+        self.reload_theme()
+
+    def check_external_theme_change(self):
+        """Verifica se o Desktop.conf mudou (ex: alterado pelo StartMenu) e recarrega."""
+        if os.path.exists(config_path):
+            mtime = os.path.getmtime(config_path)
+            if mtime != self.last_config_mtime:
+                self.last_config_mtime = mtime
+                self.reload_theme()
+
+    def reload_theme(self):
+        """Lê o Desktop.conf e reaplica o tema no próprio DektopConfigMenu."""
+        # Se você tiver um método para recarregar o stylesheet do DesktopConfigMenu:
+        settings = QSettings(config_path, QSettings.Format.IniFormat)
+        settings.beginGroup("theme")
+        theme_mode = str(settings.value("theme", "Dark")).strip().capitalize()
+        settings.endGroup()
+
+        # Atualiza a ComboBox visual se ela existir no seu menu
+        if hasattr(self, 'theme_combo'):
+            self.theme_combo.blockSignals(True)
+            self.theme_combo.setCurrentText(theme_mode)
+            self.theme_combo.blockSignals(False)
+
+        # Re-aplica o estilo da janela (chame sua função de estilo do Modules/DesktopMenu/Style.py)
+        # Exemplo: apply_style(self, CONFIG_PATH)
+        self.update()
+        self.apply_styles()
 
     def make_scrollable(self, widget: QWidget) -> QScrollArea:
         scroll = QScrollArea()
@@ -99,6 +138,7 @@ class SettingsApp(QWidget):
         self.app_terminal_input.setText(str(self.settings.value("terminal", "kitty")))
         self.app_filemanager_input.setText(str(self.settings.value("filemanager", "dolphin")))
         self.app_menu_input.setText(str(self.settings.value("menu", "hyprlauncher")))
+        self.app_Browser_input.setText(str(self.settings.value("Browser", "firefox")))
         self.settings.endGroup()
 
         self.settings.beginGroup("Keybinds")
@@ -107,6 +147,8 @@ class SettingsApp(QWidget):
         self.bind_close_input.setText(str(self.settings.value("bind_close", "C")))
         self.bind_menu_input.setText(str(self.settings.value("bind_menu", "R")))
         self.bind_filemanager_input.setText(str(self.settings.value("bind_filemanager", "E")))
+        self.bind_Browser_input.setText(str(self.settings.value("bind_browser", "W")))
+        self.bind_ToggleFloting.setText(str(self.settings.value("bind_ToggleFloting", "Space")))
         self.settings.endGroup()
 
         self.apply_styles()
@@ -114,6 +156,9 @@ class SettingsApp(QWidget):
     def save_settings(self):
         selected_theme = self.theme_combo.currentText()
         accent_color = self.color_input.text().strip() or "#89b4fa"
+
+        # Dispara a atualização global do sistema e notifica o StartMenu
+        set_system_theme(selected_theme, accent_color)
 
         rounding = self.hypr_rounding_input.text().strip()
         border_size = self.hypr_border_size_input.text().strip()
@@ -149,6 +194,7 @@ class SettingsApp(QWidget):
         self.settings.setValue("terminal", self.app_terminal_input.text().strip() or "kitty")
         self.settings.setValue("filemanager", self.app_filemanager_input.text().strip() or "dolphin")
         self.settings.setValue("menu", self.app_menu_input.text().strip() or "hyprlauncher")
+        self.settings.setValue("Browser", self.app_Browser_input.text().strip() or "firefox")
         self.settings.endGroup()
 
         self.settings.beginGroup("Keybinds")
@@ -157,10 +203,17 @@ class SettingsApp(QWidget):
         self.settings.setValue("bind_close", self.bind_close_input.text().strip() or "C")
         self.settings.setValue("bind_menu", self.bind_menu_input.text().strip() or "R")
         self.settings.setValue("bind_filemanager", self.bind_filemanager_input.text().strip() or "E")
+        self.settings.setValue("bind_browser", self.bind_Browser_input.text().strip() or "W")
+        self.settings.setValue("bind_ToggleFloting", self.bind_ToggleFloting.text().strip() or "Space")
         self.settings.endGroup()
 
         self.settings.sync()
         self.apply_styles()
+
+        selected_theme = self.theme_combo.currentText()
+        accent_color = self.color_input.text() if hasattr(self, 'color_input') else "#0cb6ff"
+        
+        set_system_theme(selected_theme, accent_color)
 
         # Aplicar no Hyprland
         try:

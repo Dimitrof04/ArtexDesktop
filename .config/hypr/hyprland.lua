@@ -8,11 +8,11 @@ hl.monitor({
     scale    = "auto",
 })
 
-local Keybinds = require("Keybindings")
-local animations = require("animationcurve") 
-local AutoStart = require("Autostart")
-local config = require("config")
-local WindowRules = require("windowsrule")
+local Keybinds = require("HyprlandFiles/Keybindings")
+local animations = require("HyprlandFiles/animationcurve") 
+local AutoStart = require("HyprlandFiles/Autostart")
+local config = require("HyprlandFiles/config")
+local WindowRules = require("HyprlandFiles/windowsrule")
 
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
