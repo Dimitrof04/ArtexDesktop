@@ -1,17 +1,11 @@
--- Defina o caminho completo para o arquivo (substitua 'seu_usuario' pelo seu nome de usuário real)
-local MenuDesktop = "~/.config/DesktopDimitrof04Apps/DektopConfigMenu.py"
-local StartMenu   = "~/.config/DesktopDimitrof04Apps/StartMenu.py"
--- Coloque os comandos como strings dentro da tabela
 local Autoboot = {
-    "nm-applet", -- Substituído 'NetwokManager' pelo comando gráfico comum ou o binário correto
+    "nm-applet",
     "awww-daemon",
+    "ArtexDesktop --ShellBar -i"
 }
 
 hl.on("hyprland.start", function()
-    os.execute("chmod +x " .. MenuDesktop)
-    os.execute("chmod +x " .. StartMenu)
-    -- Itera corretamente sobre a tabela usando ipairs
     for _, Comand in ipairs(Autoboot) do
-        os.execute(Comand .. " &") -- Executa o comando em segundo plano
+        os.execute(Comand .. " &")
     end
 end)
