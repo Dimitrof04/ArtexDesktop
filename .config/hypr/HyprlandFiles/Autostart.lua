@@ -3,7 +3,6 @@ local MenuDesktop = "~/.config/DesktopDimitrof04Apps/DektopConfigMenu.py"
 local StartMenu   = "~/.config/DesktopDimitrof04Apps/StartMenu.py"
 -- Coloque os comandos como strings dentro da tabela
 local Autoboot = {
-    "waybar",
     "nm-applet", -- Substituído 'NetwokManager' pelo comando gráfico comum ou o binário correto
     "awww-daemon",
 }

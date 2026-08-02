@@ -109,3 +109,13 @@ hl.config({
         },
     },
 })
+
+--[[hl.config({
+    decoration = {
+        blur = {
+            enabled = true, -- atenção ao 'd' no final (enabled)
+            size = 8,
+            passes = 3
+        }
+    }
+})]]

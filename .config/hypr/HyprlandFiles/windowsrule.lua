@@ -46,3 +46,27 @@ hl.window_rule ({
     { "pin",        "class:^(hypr_menu)$" },
     { "dimaround",  "class:^(hypr_menu)$" },
 })
+
+hl.window_rule ({
+    { "float",      "class:^(hypr_menu)$" },
+    { "center",     "class:^(hypr_menu)$" },
+    { "stayfocused","class:^(hypr_menu)$" },
+    { "pin",        "class:^(hypr_menu)$" },
+    { "dimaround",  "class:^(hypr_menu)$" },
+})
+
+-- Habilita opacidade e blur para a classe do Foot
+--[[hl.window_rule({
+    match = { class = "^(foot)$" },
+    opacity = "0.85 0.85",
+})
+
+
+-- Regras para transformar o ShellBar.py em uma barra nativa no topo
+--hl.window_rule({
+    { "float",      "title:^(Hyprland Python Bar)$" },
+    { "move 0 0",   "title:^(Hyprland Python Bar)$" },
+    { "pin",        "title:^(Hyprland Python Bar)$" },
+    { "noborder",   "title:^(Hyprland Python Bar)$" },
+    { "noshadow",   "title:^(Hyprland Python Bar)$" },
+})]]

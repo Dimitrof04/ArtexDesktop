@@ -43,7 +43,8 @@ hl.bind(mainMod .. " + " .. key_menu, hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + " .. key_file, hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + " .. key_Browser, hl.dsp.exec_cmd(Browser))
 hl.bind(mainMod .. " + " .. key_float, hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("ArtexDesktop --Desktop"))
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("ArtexDesktop --Desktop -i"))
+
 
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    
@@ -62,7 +63,7 @@ hl.bind(mainMod .. " + Page_Down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + SHIFT + Page_Up",   hl.dsp.window.move({ workspace = "e-1" }))
 hl.bind(mainMod .. " + SHIFT + Page_Down", hl.dsp.window.move({ workspace = "e+1" }))
 
-hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("killall waybar && waybar")) -- restart waybar
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("ArtexDesktop --ShellBar -r")) -- restart waybar
 
 -- Mantido suporte a mudar via números [1-10]
 for i = 1, 10 do

@@ -20,7 +20,7 @@ class KeybindsTab(QWidget):
 
         layout.addWidget(QLabel("Emulador de Terminal:"))
         self.app.app_terminal_input = QLineEdit()
-        self.app.app_terminal_input.setPlaceholderText("kitty")
+        self.app.app_terminal_input.setPlaceholderText("foot")
         layout.addWidget(self.app.app_terminal_input)
 
         layout.addWidget(QLabel("Navegardor"))

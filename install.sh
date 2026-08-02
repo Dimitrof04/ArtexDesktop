@@ -11,24 +11,11 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_CONFIG="$HOME/.config"
 TARGET_HOME="$HOME"
-PICTURES_DIR="$HOME/Pictures"
-#!/bin/bash
-
-# Cores para mensagens
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
-
-# Definindo variáveis de repositório e diretórios locais
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET_CONFIG="$HOME/.config"
-TARGET_HOME="$HOME"
+TARGET_LOCAL_SHARE="$HOME/.local/share"
 PICTURES_DIR="$HOME/Pictures"
 
 echo -e "${BLUE}=======================================${NC}"
-echo -e "${GREEN}     Welcome to Dimitrof04Desktop!    ${NC}"
+echo -e "${BLUE}     Welcome to ArtexDesktop!          ${NC}"
 echo -e "${BLUE}=======================================${NC}"
 
 # Check/Install yay
@@ -58,13 +45,13 @@ copy_file() {
     
     if $IS_AUTO; then
         cp -rf "$src" "$dest"
-        echo -e "${GREEN}[+] Copied ${src} -> ${dest}${NC}"
+        echo -e "${BLUE}[+] Copied ${src} -> ${dest}${NC}"
     else
         read -p "Overwrite/Copy ${src} to ${dest}? [Y/n]: " confirm
         confirm=${confirm:-Y}
         if [[ $confirm =~ ^[Yy]$ ]]; then
             cp -rf "$src" "$dest"
-            echo -e "${GREEN}[+] Copied!${NC}"
+            echo -e "${BLUE}[+] Copied!${NC}"
         else
             echo -e "${RED}[-] Skipped ${src}${NC}"
         fi
@@ -74,10 +61,10 @@ copy_file() {
 # 1. Copiar pacotes essenciais
 echo -e "\n${BLUE}--- Installing Packages ---${NC}"
 yay -Syu --noconfirm
-yay -S --needed --noconfirm hyprland waybar python-pyqt6 kitty awww hyprlock pavucontrol ttf-nerd-fonts-symbols dolphin
+yay -S --needed --noconfirm hyprland waybar python-pyqt6 foot fish awww hyprlock pavucontrol ttf-nerd-fonts-symbols dolphin
 
 # Atualizar repositórios e instalar pacotes do sistema
-yay -S --needed --noconfirm python python-psutil python-pyqt6 networkmanager bluez bluez-utils wireplumber pipewire-audio lsb-release ttf-font-awesome ttf-nerd-fonts-symbols-common noto-fonts-emoji
+yay -S --needed --noconfirm python python-psutil python-pyqt6 networkmanager bluez bluez-utils wireplumber pipewire-audio lsb-release ttf-font-awesome ttf-nerd-fonts-symbols-common noto-fonts-emoji gtk-layer-shell
 
 # Habilitar serviços essenciais
 sudo systemctl enable --now NetworkManager
@@ -88,7 +75,7 @@ read -p "Install extra tools (cmatrix, cava, fastfetch, asciiquarium, pipes.sh, 
 INSTALL_TOOLS=${INSTALL_TOOLS:-Y}
 
 if [[ $INSTALL_TOOLS =~ ^[Yy]$ ]]; then
-    echo -e "${GREEN}[+] Installing tools...${NC}"
+    echo -e "${BLUE}[+] Installing tools...${NC}"
     yay -S --needed fastfetch asciiquarium pipes.sh lavat peaclock cmatrix cava --noconfirm
 fi
 
@@ -103,7 +90,25 @@ if [ -d "$SCRIPT_DIR/.config" ]; then
     done
 fi
 
-# 4. Copiar Shells (.bashrc, .zshrc)
+# Copiar DefaultConfigs.conf para ~/.config/Desktop.conf (se não existir)
+if [ -f "$SCRIPT_DIR/DefaultConfigs.conf" ]; then
+    if [ ! -f "$TARGET_CONFIG/Desktop.conf" ]; then
+        cp "$SCRIPT_DIR/DefaultConfigs.conf" "$TARGET_CONFIG/Desktop.conf"
+        echo -e "${BLUE}[+] Copied DefaultConfigs.conf to ~/.config/Desktop.conf${NC}"
+    else
+        echo -e "${YELLOW}[!] ~/.config/Desktop.conf already exists. Skipping.${NC}"
+    fi
+fi
+
+# 4. Copiar pasta ArtexDesktop para ~/.local/share/ (Subscreve direto sem pedir)
+echo -e "\n${BLUE}--- Deploying ArtexDesktop App Data ---${NC}"
+if [ -d "$SCRIPT_DIR/ArtexDesktop" ]; then
+    mkdir -p "$TARGET_LOCAL_SHARE"
+    cp -rf "$SCRIPT_DIR/ArtexDesktop" "$TARGET_LOCAL_SHARE/"
+    echo -e "${BLUE}[+] Overwritten ArtexDesktop in ~/.local/share/${NC}"
+fi
+
+# 5. Copiar Shells (.bashrc, .zshrc)
 echo -e "\n${BLUE}--- Deploying Shell Configurations ---${NC}"
 if [ -d "$SCRIPT_DIR/Shells" ]; then
     for shell_file in "$SCRIPT_DIR/Shells"/.*; do
@@ -117,7 +122,7 @@ if [ -d "$SCRIPT_DIR/Shells" ]; then
     done
 fi
 
-# 5. Gerenciamento de Wallpapers
+# 6. Gerenciamento de Wallpapers
 echo -e "\n${BLUE}--- Setting up Wallpapers ---${NC}"
 mkdir -p "$PICTURES_DIR"
 
@@ -131,13 +136,13 @@ if [ -d "$PICTURES_DIR/Wallpapers" ]; then
     case $WP_EXISTING_CHOICE in
         1)
             cp -rn "$SCRIPT_DIR/Wallpapers"/* "$PICTURES_DIR/Wallpapers/"
-            echo -e "${GREEN}[+] Added wallpapers into ~/Pictures/Wallpapers/${NC}"
+            echo -e "${BLUE}[+] Added wallpapers into ~/Pictures/Wallpapers/${NC}"
             ;;
         3)
-            NEW_DIR="$PICTURES_DIR/Wallpapers_Dimitrof04"
+            NEW_DIR="$PICTURES_DIR/Wallpapers_ArtexDesktop"
             mkdir -p "$NEW_DIR"
             cp -r "$SCRIPT_DIR/Wallpapers"/* "$NEW_DIR/"
-            echo -e "${GREEN}[+] Copied wallpapers into ${NEW_DIR}${NC}"
+            echo -e "${BLUE}[+] Copied wallpapers into ${NEW_DIR}${NC}"
             ;;
         *)
             echo -e "${RED}[-] Skipping wallpapers.${NC}"
@@ -153,7 +158,7 @@ else
         1)
             mkdir -p "$PICTURES_DIR/Wallpapers"
             cp -r "$SCRIPT_DIR/Wallpapers"/* "$PICTURES_DIR/Wallpapers/"
-            echo -e "${GREEN}[+] Created folder and added wallpapers!${NC}"
+            echo -e "${BLUE}[+] Created folder and added wallpapers!${NC}"
             ;;
         *)
             echo -e "${RED}[-] Doing nothing for wallpapers.${NC}"
@@ -161,8 +166,6 @@ else
     esac
 fi
 
-sudo ln -s ~/.config/DesktopDimitrof04Apps/StartMenu.py /usr/local/bin/D04
-
-echo -e "\n${GREEN}=======================================${NC}"
-echo -e "${GREEN}    Installation Complete! Enjoy! :3   ${NC}"
-echo -e "${GREEN}=======================================${NC}"
+echo -e "\n${BLUE}=======================================${NC}"
+echo -e "${BLUE}    Installation Complete! Enjoy! :3   ${NC}"
+echo -e "${BLUE}=======================================${NC}"

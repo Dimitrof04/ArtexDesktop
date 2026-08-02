@@ -1,2 +1,0 @@
-fastfetch
-PROMPT=$'╭─ %~\n╰─ %n ~\$ '
