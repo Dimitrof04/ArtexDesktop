@@ -64,19 +64,22 @@ yay -Syu --noconfirm
 yay -S --needed --noconfirm hyprland waybar python-pyqt6 foot fish awww hyprlock pavucontrol ttf-nerd-fonts-symbols dolphin
 
 # Atualizar repositórios e instalar pacotes do sistema
-yay -S --needed --noconfirm python python-psutil python-pyqt6 networkmanager bluez bluez-utils wireplumber pipewire-audio lsb-release ttf-font-awesome ttf-nerd-fonts-symbols-common noto-fonts-emoji gtk-layer-shell
+yay -S --needed --noconfirm gtk3 python python-psutil python-pyqt6 networkmanager bluez bluez-utils wireplumber pipewire-audio lsb-release ttf-font-awesome ttf-nerd-fonts-symbols-common noto-fonts-emoji gtk-layer-shell
+#yay -S --needed --noconfirm luarocks gobject-introspection lua54 lua lua-lgi luajit lua54
+
+#sudo luarocks --lua-version=5.1 install lgi
 
 # Habilitar serviços essenciais
 sudo systemctl enable --now NetworkManager
 sudo systemctl enable --now bluetooth
 
 # 2. Perguntar sobre Tools adicionais
-read -p "Install extra tools (cmatrix, cava, fastfetch, asciiquarium, pipes.sh, lavat, peaclock)? [Y/n]: " INSTALL_TOOLS
+read -p "Install extra tools (unimatrix, cava, fastfetch, asciiquarium, pipes.sh, lavat, peaclock)? [Y/n]: " INSTALL_TOOLS
 INSTALL_TOOLS=${INSTALL_TOOLS:-Y}
 
 if [[ $INSTALL_TOOLS =~ ^[Yy]$ ]]; then
     echo -e "${BLUE}[+] Installing tools...${NC}"
-    yay -S --needed fastfetch asciiquarium pipes.sh lavat peaclock cmatrix cava --noconfirm
+    yay -S --needed fastfetch asciiquarium pipes.sh lavat peaclock unimatrix cava --noconfirm
 fi
 
 # 3. Copiar configurações de .config
@@ -165,6 +168,8 @@ else
             ;;
     esac
 fi
+
+sudo ln -s ~/.local/share/ArtexDesktop/Main.sh /usr/local/bin/ArtexDesktop
 
 echo -e "\n${BLUE}=======================================${NC}"
 echo -e "${BLUE}    Installation Complete! Enjoy! :3   ${NC}"

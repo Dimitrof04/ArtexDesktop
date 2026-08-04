@@ -23,10 +23,10 @@ class SystemTab(QWidget):
 
     def build_ui(self):
         actions = [
-            ("⚡ Desligar", "systemctl poweroff", "#f38ba8"),
-            ("🔄 Reiniciar", "systemctl reboot", "#fab387"),
-            ("🌙 Sleep (Suspender)", "systemctl suspend", "#89dceb"),
-            ("🚪 Logout (Hyprland)", "hyprctl dispatch exit", "#f9e2af"),
+            ("⚡ Desligar", "hyprshutdown -t 'Shutdown...' --post-cmd 'shutdown -P 0'", "#f38ba8"),
+            ("🔄 Reiniciar", "hyprshutdown -t 'Reboot / Restart...' --post-cmd 'reboot'", "#fab387"),
+            ("🌙 Sleep (Suspender)", "hyprshutdown -t 'Slepping. . . ...' --post-cmd 'systemctl suspend'", "#89dceb"),
+            ("🚪 Logout (Hyprland)", "hyprshutdown", "#f9e2af"),
             ("⚙️ Configurações do Desktop", f"python3 {CONFIG_MENU_PATH}", "#89b4fa"),
         ]
 

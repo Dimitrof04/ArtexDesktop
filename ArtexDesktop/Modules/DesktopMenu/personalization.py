@@ -1,5 +1,3 @@
-# modules/personalization.py
-
 import os
 import random
 from pathlib import Path
@@ -7,6 +5,8 @@ from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QLineEdit, QComboBox, QPushButton, QFileDialog, QColorDialog
 )
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
 
 class PersonalizationTab(QWidget):
     def __init__(self, parent_app):
@@ -61,9 +61,19 @@ class PersonalizationTab(QWidget):
         layout.addLayout(border_color_layout)
 
         layout.addWidget(QLabel("<h2>Wallpaper</h2>"))
+        
+        # --- PREVIEW DO WALLPAPER ---
+        self.wallpaper_preview_label = QLabel("Nenhum wallpaper selecionado")
+        self.wallpaper_preview_label.setFixedSize(280, 150)
+        self.wallpaper_preview_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.wallpaper_preview_label.setStyleSheet("border: 1px solid #444; border-radius: 8px; background-color: #111;")
+        layout.addWidget(self.wallpaper_preview_label)
+
         layout.addWidget(QLabel("Caminho do Wallpaper Atual:"))
         file_layout = QHBoxLayout()
         self.app.wallpaper_path_input = QLineEdit()
+        self.app.wallpaper_path_input.textChanged.connect(self.update_wallpaper_preview)
+        
         browse_file_btn = QPushButton("Procurar...")
         browse_file_btn.clicked.connect(self.select_wallpaper_file)
         file_layout.addWidget(self.app.wallpaper_path_input)
@@ -97,6 +107,19 @@ class PersonalizationTab(QWidget):
         layout.addWidget(random_wp_btn)
 
         layout.addStretch()
+
+    def update_wallpaper_preview(self, path: str):
+        if path and os.path.exists(path):
+            pixmap = QPixmap(path)
+            if not pixmap.isNull():
+                scaled_pixmap = pixmap.scaled(
+                    self.wallpaper_preview_label.size(),
+                    Qt.AspectRatioMode.KeepAspectRatio,
+                    Qt.TransformationMode.SmoothTransformation
+                )
+                self.wallpaper_preview_label.setPixmap(scaled_pixmap)
+                return
+        self.wallpaper_preview_label.setText("Imagem não encontrada")
 
     def select_wallpaper_file(self):
         file_path, _ = QFileDialog.getOpenFileName(

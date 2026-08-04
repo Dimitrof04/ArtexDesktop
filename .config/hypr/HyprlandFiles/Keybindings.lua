@@ -43,7 +43,7 @@ hl.bind(mainMod .. " + " .. key_menu, hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + " .. key_file, hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + " .. key_Browser, hl.dsp.exec_cmd(Browser))
 hl.bind(mainMod .. " + " .. key_float, hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("ArtexDesktop --Desktop -i"))
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("ArtexDesktop --Desktop -r"))
 
 
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
