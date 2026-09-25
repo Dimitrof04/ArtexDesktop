@@ -1,0 +1,49 @@
+:root {
+    --text-color: white;
+    --backgroud-color: #585858;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+}
+
+body {
+    background: -moz-linear-gradient(to right, #45f9d5, #7789ff);
+}
+
+/* nav || top bar */
+
+.topbar {
+    background-color: var(--backgroud-color);
+    width: 100%;
+    height: 6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbuttons a {
+    text-decoration: none;
+    margin-right: 0.4rem;
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.topbuttons a:hover {
+    color: #7789ff;
+}
+
+/* Painel */
+
+.painel {
+    display: flexbox;
+    justify-content: center;
+}
+
+.title {
+    margin-top: 10rem;
+    font-size: 6rem;
+}
+
