@@ -17,12 +17,12 @@ O core do projeto está sendo desenvolvido focando em desempenho e extensibilida
 
 ## 🧩 Ecossistema do Projeto
 
-O ArtexDesktop funciona como quebra
+O ArtexDesktop funciona como um quebra-cabeca aonde voce pode personalizar e juntar cada peca
 
 | Repositório | Descrição | Status |
 | :--- | :--- | :---: |
 | 🛠️ [Artex Apps](https://github.com/Dimitrof04/ArtexDesktopApps) | Suíte de aplicativos e utilitários auxiliares do ecossistema. | 🛠️ *Manutenção* |
-| 🌀 [ArtexDesktop Hyprland](https://github.com/Dimitrof04/ArtexDesktopHyprland) | Configurações, temas e integração específica para o compositor Hyprland (Wayland). | 🚀 *Ativo* |
+| 🌀 [ArtexDesktop Hyprland](https://github.com/Dimitrof04/ArtexDesktopHyprland) | Configurações, temas e integração específica para o compositor Hyprland (Wayland). | 🛠️ *Manutenção* |
 | 🌐 [ArtexDesktop Gnome](https://github.com/Dimitrof04/ArtexDesktopGnome) | Integração e extensão dedicada ao ambiente GNOME. | 🔒 *Privado* |
 
 ---
@@ -32,18 +32,6 @@ O ArtexDesktop funciona como quebra
 > **Nota:** O repositório está em desenvolvimento ativo.
 
 ### Pré-requisitos
-* Compilador C++ com suporte a **C++17** ou superior (`g++` / `clang`)
-* `cmake` ou `make`
-* Dependências do sistema (detalhadas nos submódulos)
-
-```bash
-# Clone o repositório
-git clone [https://github.com/Dimitrof04/ArtexDesktop.git](https://github.com/Dimitrof04/ArtexDesktop.git)
-
-# Acesse o diretório
-cd ArtexDesktop
-
-# Exemplo de build padrão
-mkdir build && cd build
-cmake ..
-make
+* Arch btw (opicional)
+* Uma batata (opicional)
+* Energia (opicional)
