@@ -1,12 +1,19 @@
 :root {
     --text-color: white;
     --backgroud-color: #585858;
+    --backgroud-color2: #2b2a2a;
+    --SelectOption: #348aed;
 }
 
 * {
     margin: 0;
     padding: 0;
     color: var(--text-color);
+    transition: all 0.2s ease;
+}
+
+*:hover {
+    color: #45509a;
 }
 
 body {
@@ -28,22 +35,223 @@ body {
     text-decoration: none;
     margin-right: 0.4rem;
     font-size: 2rem;
-    transition: all 0.3s ease;
-}
-
-.topbuttons a:hover {
-    color: #7789ff;
 }
 
 /* Painel */
 
 .painel {
-    display: flexbox;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    min-height: auto;
+}
+
+.painel h4 {
+    margin-top: 3rem;
+    font-size: 3rem;
+}
+
+.painel img {
+    border-radius: 100%;
+    border: 0.4rem solid var(--text-color);
+    margin: 2rem;
+    width: 10rem;
+    height: auto;
+}
+
+.painel button {
+    background: transparent;
+    margin: 0.5rem;
+    width: 15rem;
+    height: 5rem;
+    border-width: 0;
+    /*
+    border: 0.3rem solid var(--text-color);
+    border-radius: 10rem; 
+    */
+    font-size: 4rem;
 }
 
 .title {
     margin-top: 10rem;
+    margin-bottom: 3rem;
     font-size: 6rem;
 }
 
+/* Config Menu (config.html) */
+
+.configbody * {
+    color: var(--text-color);
+}
+
+.configbody * {
+    color: var(--text-color);
+}
+
+.NavConfig {
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    width: 18vw;
+    height: 100vh;
+    background-color: var(--backgroud-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.ConfigMenu {
+    width: 90vw;
+    height: 100vh;
+    background-color: var(--backgroud-color);
+}
+
+.ConfigMenu * {
+    margin-left: 1rem;
+}
+
+#ConfigName {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.window {
+    width: 79vw;
+    height: 91vh;
+    background-color: var(--backgroud-color2);
+    border: 0.3rem solid var(--text-color);
+    border-radius: 1rem;
+}
+
+#NavCongigBar {
+    background-color: var(--backgroud-color);
+    margin-top: 1rem;
+    width: 77vw;
+    height: 4vh;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+#NavCongigBar button {
+    width: auto;
+    max-width: 7vw;
+    height: 4vh;
+    background-color: rgba(255, 255, 255, 0);
+    border: 0;
+    border-radius: 0.2rem;
+    transition: all 0.2s ease;
+}
+
+#NavCongigBar button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+.sentings {
+    margin-top: 1rem;
+    height: auto;
+    max-height: 82vh;
+    max-width: 77vw;
+    overflow: auto;
+}
+
+.sentings * {
+    margin-top: 1rem;
+}
+
+.flex {
+    display: flex;
+    margin-left: 0;
+    align-items: center;
+    width: auto;
+}
+
+input[type="text"] {
+    background-color: #1a1a24;
+    color: #e0e0e0;
+    border: 1px solid #33334d;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus {
+    border-color: var(--SelectOption);
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15%;
+    height: 6px;
+    background: #282836;
+    border-radius: 3px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--SelectOption);
+    cursor: pointer;
+    transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: var(--SelectOption);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: none;
+    border-radius: 50%;
+    background: var(--SelectOption);
+    cursor: pointer;
+}
+
+/* Checkbox Estilizado */
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #1a1a24;
+    border: 1px solid #33334d;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Estado Hover */
+input[type="checkbox"]:hover {
+    border-color: var(--SelectOption);
+}
+
+/* Estado Marcado (Checked) */
+input[type="checkbox"]:checked {
+    background-color: var(--SelectOption);
+    border-color: var(--SelectOption);
+}
+
+/* Desenho do "Check" (Sinal de V) dentro do checkbox */
+input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--text-color);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
