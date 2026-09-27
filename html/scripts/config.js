@@ -72,6 +72,12 @@ class Settings {
     }
 
     // --- LEITOR PRÓPRIO DE INI (SEM BIBLIOTECAS) ---
+    initAutoShutdown() {
+        window.addEventListener("pagehide", () => {
+            navigator.sendBeacon("http://localhost:18080/api/shutdown");
+        });
+    }
+
     parseAndBuildINI(iniContent) {
         const lines = iniContent.split(/\r?\n/);
         let currentSection = "";
@@ -181,6 +187,3 @@ settings.loadConfigFromAPI();
 window.addEventListener("beforeunload", () => {
     navigator.sendBeacon("http://localhost:17104/api/shutdown");
 });
-
-// Para salvar as alterações (pode vincular esta função a um botão 'Salvar'):
-// settings.saveConfigToAPI();

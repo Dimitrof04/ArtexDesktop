@@ -107,6 +107,35 @@ body {
     justify-content: space-between;
 }
 
+.NavConfig-Buttons {
+    height: auto;
+    width: 17vw;
+    border-width: 0.2rem 0 0 0;
+    border-color: var(--text-color);
+    border-style: solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.NavConfig-Buttons button {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    width: 15vw;
+    height: 4vh;
+    background: transparent;
+    border: 0.2rem solid var(--text-color);
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    transition: all 0.2s ease;
+}
+
+.NavConfig-Buttons button:hover {
+    color: var(--SelectOption);
+    border-color: var(--SelectOption);
+    cursor: pointer;
+}
+
 .ConfigMenu {
     width: 90vw;
     height: 100vh;
@@ -124,7 +153,7 @@ body {
 
 .window {
     width: 78vw;
-    height: 91vh;
+    height: 89.5vh;
     background-color: var(--backgroud-color2);
     border: 0.3rem solid var(--text-color);
     border-radius: 1rem;
@@ -133,7 +162,7 @@ body {
 #NavCongigBar {
     background-color: var(--backgroud-color);
     margin-top: 1rem;
-    width: 77vw;
+    width: 76vw;
     height: 4vh;
     border-radius: 1rem;
     display: flex;
