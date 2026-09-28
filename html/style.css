@@ -5,15 +5,20 @@
     --SelectOption: #348aed;
 }
 
+.sua-div {
+  height: 100dvh; /* Adapta perfeitamente no mobile */
+}
+
 * {
-    margin: 0;
-    padding: 0;
-    color: var(--text-color);
-    transition: all 0.2s ease;
+  box-sizing: border-box; /* O padding e a borda ficam dentro do tamanho total */
+  margin: 0;
+  padding: 0;
 }
 
 *:hover {
     color: #45509a;
+    color: var(--text-color);
+    transition: all 0.2s ease;
 }
 
 body {
@@ -90,16 +95,14 @@ body {
 
 .configbody * {
     color: var(--text-color);
-}
-
-.configbody * {
-    color: var(--text-color);
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .NavConfig {
     margin-left: 1.5rem;
     margin-right: 1.5rem;
-    width: 18vw;
+    width: 18%;
     height: 100vh;
     background-color: var(--backgroud-color);
     display: flex;
@@ -109,7 +112,7 @@ body {
 
 .NavConfig-Buttons {
     height: auto;
-    width: 17vw;
+    width: 100%;
     border-width: 0.2rem 0 0 0;
     border-color: var(--text-color);
     border-style: solid;
@@ -121,7 +124,7 @@ body {
 .NavConfig-Buttons button {
     margin-top: 0.3rem;
     margin-bottom: 0.3rem;
-    width: 15vw;
+    width: 90%;
     height: 4vh;
     background: transparent;
     border: 0.2rem solid var(--text-color);
@@ -137,7 +140,7 @@ body {
 }
 
 .ConfigMenu {
-    width: 90vw;
+    width: 90%;
     height: 100vh;
     background-color: var(--backgroud-color);
 }
@@ -152,8 +155,8 @@ body {
 }
 
 .window {
-    width: 78vw;
-    height: 89.5vh;
+    width: 98%;
+    height: 90%;
     background-color: var(--backgroud-color2);
     border: 0.3rem solid var(--text-color);
     border-radius: 1rem;
@@ -162,21 +165,20 @@ body {
 #NavCongigBar {
     background-color: var(--backgroud-color);
     margin-top: 1rem;
-    width: 76vw;
-    height: 4vh;
+    width: 98%;
+    height: 4%;
     border-radius: 1rem;
     display: flex;
     align-items: center;
 }
 
 #NavCongigBar button {
-    width: auto;
-    max-width: 7vw;
-    height: 4vh;
+    width: 7%;
+    height: 100%;
     background-color: rgba(255, 255, 255, 0);
     border: 0;
     border-radius: 0.2rem;
-    transition: all 0.2s ease;
+    transition: backgroud-color 0.2s ease;
 }
 
 #NavCongigBar button:hover {
