@@ -1,69 +1,108 @@
-const SenntingsPainel = document.getElementsByClassName("window")[0];
+const SettingsPainel = document.getElementsByClassName("window")[0];
 const NavBar = document.getElementById("NavCongigBar");
 
-class Settings {
-    constructor() {
+// ==========================================
+// 1. CLASSE RESPONSÁVEL APENAS PELA API (REQUISIÇÕES)
+// ==========================================
+class ConfigAPI {
+    constructor(baseUrl = "http://localhost:18080") {
+        this.baseUrl = baseUrl;
+    }
+
+    // Carrega o arquivo INI
+    async fetchConfig() {
+        const response = await fetch(`${this.baseUrl}/api/config`);
+        if (!response.ok) throw new Error("Erro ao carregar configurações");
+        return await response.text();
+    }
+
+    // Salva a string formatada no backend
+    async saveConfig(iniOutput) {
+        const response = await fetch(`${this.baseUrl}/api/config`, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: iniOutput
+        });
+        if (!response.ok) throw new Error("Erro ao salvar configurações");
+        return response;
+    }
+
+    // Notifica o encerramento do backend
+    sendShutdown(port = "18080") {
+        navigator.sendBeacon(`http://localhost:${port}/api/shutdown`);
+    }
+}
+
+
+// ==========================================
+// 2. CLASSE RESPONSÁVEL APENAS PELA INTERFACE (DOM/UI)
+// ==========================================
+class ConfigUIBuilder {
+    constructor(panelContainer, navBarContainer) {
+        this.panelContainer = panelContainer;
+        this.navBarContainer = navBarContainer;
         this.pages = [];
-        this.configData = {}; // Objeto para controlar o estado
     }
 
-    createPage(id) {
-        if (!id) return;
+    // Cria uma aba/página visual
+    createPage(id, onTabClick) {
+        if (!id) return null;
 
-        const PageButton = document.createElement("button");
-        const Pagediv = document.createElement("div");
+        const pageButton = document.createElement("button");
+        const pageDiv = document.createElement("div");
 
-        PageButton.innerText = id;
-        Pagediv.id = id + "-config";
+        pageButton.innerText = id;
+        pageDiv.id = id + "-config";
         
-        // Classe CSS solicitada
-        Pagediv.classList.add("sentings");
-        Pagediv.style.display = "none";
+        pageDiv.classList.add("sentings");
+        pageDiv.style.display = "none";
 
-        const Title = document.createElement("h1");
-        Title.innerText = id;
-        Pagediv.appendChild(Title);
+        const title = document.createElement("h1");
+        title.innerText = id;
+        pageDiv.appendChild(title);
 
-        PageButton.onclick = () => this.openTab(id);
+        pageButton.onclick = () => onTabClick(id);
 
-        NavBar.appendChild(PageButton);
-        SenntingsPainel.appendChild(Pagediv);
+        this.navBarContainer.appendChild(pageButton);
+        this.panelContainer.appendChild(pageDiv);
 
-        this.pages.push(Pagediv);
+        this.pages.push(pageDiv);
 
-        return {
-            createConfig: (name, type, value, minValue = 0, maxValue = 100) => {
-                const ConfigTitle = document.createElement("h2");
-                ConfigTitle.innerText = name;
-                Pagediv.appendChild(ConfigTitle);
-
-                let input;
-
-                if (type === "range" || type === "scroll") {
-                    input = document.createElement("input");
-                    input.type = "range";
-                    input.min = minValue;
-                    input.max = maxValue;
-                    input.value = value;
-                } else if (type === "checkbox" || type === "toggle") {
-                    input = document.createElement("input");
-                    input.type = "checkbox";
-                    input.checked = (value === "true" || value === true);
-                } else {
-                    input = document.createElement("input");
-                    input.type = "text";
-                    input.value = value;
-                }
-
-                // Identificadores no elemento DOM para leitura na hora de salvar
-                input.dataset.section = id;
-                input.dataset.key = name;
-
-                Pagediv.appendChild(input);
-            }
-        };
+        return pageDiv;
     }
 
+    // Adiciona um campo de configuração dentro de uma página
+    createConfigField(pageDiv, sectionId, name, type, value, minValue = 0, maxValue = 100) {
+        const configTitle = document.createElement("h2");
+        configTitle.innerText = name;
+        pageDiv.appendChild(configTitle);
+
+        let input;
+
+        if (type === "range" || type === "scroll") {
+            input = document.createElement("input");
+            input.type = "range";
+            input.min = minValue;
+            input.max = maxValue;
+            input.value = value;
+        } else if (type === "checkbox" || type === "toggle") {
+            input = document.createElement("input");
+            input.type = "checkbox";
+            input.checked = (value === "true" || value === true);
+        } else {
+            input = document.createElement("input");
+            input.type = "text";
+            input.value = value;
+        }
+
+        input.dataset.section = sectionId;
+        input.dataset.key = name;
+
+        pageDiv.appendChild(input);
+        return input;
+    }
+
+    // Alterna a visibilidade das abas
     openTab(tab) {
         const targetId = tab + "-config";
         this.pages.forEach(page => {
@@ -71,79 +110,15 @@ class Settings {
         });
     }
 
-    // --- LEITOR PRÓPRIO DE INI (SEM BIBLIOTECAS) ---
-    initAutoShutdown() {
-        window.addEventListener("pagehide", () => {
-            navigator.sendBeacon("http://localhost:18080/api/shutdown");
-        });
-    }
-
-    parseAndBuildINI(iniContent) {
-        const lines = iniContent.split(/\r?\n/);
-        let currentSection = "";
-        let currentPage = null;
-
-        for (let line of lines) {
-            line = line.trim();
-
-            // Ignora linhas vazias e comentários
-            if (!line || line.startsWith(";") || line.startsWith("#")) continue;
-
-            // Detecta Nova Aba: [NomeDaAba]
-            if (line.startsWith("[") && line.endsWith("]")) {
-                currentSection = line.substring(1, line.length - 1).trim();
-                currentPage = this.createPage(currentSection);
-                this.configData[currentSection] = {};
-            } 
-            // Detecta Chave = Valor
-            else if (line.includes("=") && currentSection) {
-                const parts = line.split("=");
-                const key = parts[0].trim();
-                const value = parts.slice(1).join("=").trim(); // Preserva sinais de '=' no valor se houver
-
-                this.configData[currentSection][key] = value;
-
-                // Auto-Detector de Tipos de Input
-                let type = "text";
-                if (value === "true" || value === "false") {
-                    type = "checkbox";
-                } else if (!isNaN(value) && value !== "") {
-                    type = "range";
-                }
-
-                if (currentPage) {
-                    currentPage.createConfig(key, type, value, 0, 100);
-                }
-            }
-        }
-
-        // Abre a primeira página criada automaticamente
-        const firstPage = Object.keys(this.configData)[0];
-        if (firstPage) this.openTab(firstPage);
-    }
-
-    // Busca o arquivo INI no backend C++
-    async loadConfigFromAPI() {
-        try {
-            const response = await fetch("http://localhost:18080/api/config");
-            const iniText = await response.text();
-            this.parseAndBuildINI(iniText);
-        } catch (err) {
-            console.error("Erro ao carregar o arquivo do C++:", err);
-        }
-    }
-
-    // --- FUNÇÃO PARA LER OS DADOS ATUAIS E SALVAR NA API ---
-    async saveConfigToAPI() {
+    // Lê os inputs do DOM e gera o texto no formato INI
+    generateINIText() {
         let iniOutput = "";
 
-        // Percorre todas as abas criadas no DOM
-        this.pages.forEach(pagediv => {
-            const sectionName = pagediv.id.replace("-config", "");
+        this.pages.forEach(pageDiv => {
+            const sectionName = pageDiv.id.replace("-config", "");
             iniOutput += `[${sectionName}]\n`;
 
-            // Pega todos os inputs dentro desta aba
-            const inputs = pagediv.querySelectorAll("input");
+            const inputs = pageDiv.querySelectorAll("input");
             inputs.forEach(input => {
                 const key = input.dataset.key;
                 let value;
@@ -162,28 +137,104 @@ class Settings {
             iniOutput += "\n";
         });
 
-        // Envia a string formatada no formato INI via POST para a API C++
-        try {
-            const response = await fetch("http://localhost:18080/api/config", {
-                method: "POST",
-                headers: { "Content-Type": "text/plain" },
-                body: iniOutput
-            });
+        return iniOutput;
+    }
+}
 
-            if (response.ok) {
-                console.log("Configurações salvas com sucesso no ~/.config/ArtexDesktop/Hyprland/Config.ini!");
+
+// ==========================================
+// 3. CLASSE PRINCIPAL (ORQUESTRADORA E PARSER)
+// ==========================================
+class SettingsManager {
+    constructor() {
+        this.api = new ConfigAPI();
+        this.ui = new ConfigUIBuilder(SettingsPainel, NavBar);
+        this.configData = {};
+        
+        this.initAutoShutdown();
+    }
+
+    // Lê a string INI e comanda a UI para construir os elementos
+    parseAndBuildINI(iniContent) {
+        const lines = iniContent.split(/\r?\n/);
+        let currentSection = "";
+        let currentPageDiv = null;
+
+        for (let line of lines) {
+            line = line.trim();
+
+            if (!line || line.startsWith(";") || line.startsWith("#")) continue;
+
+            if (line.startsWith("[") && line.endsWith("]")) {
+                currentSection = line.substring(1, line.length - 1).trim();
+                currentPageDiv = this.ui.createPage(currentSection, (id) => this.ui.openTab(id));
+                this.configData[currentSection] = {};
+            } 
+            else if (line.includes("=") && currentSection) {
+                const parts = line.split("=");
+                const key = parts[0].trim();
+                const value = parts.slice(1).join("=").trim();
+
+                this.configData[currentSection][key] = value;
+
+                let type = "text";
+                if (value === "true" || value === "false") {
+                    type = "checkbox";
+                } else if (!isNaN(value) && value !== "") {
+                    type = "range";
+                }
+
+                if (currentPageDiv) {
+                    this.ui.createConfigField(currentPageDiv, currentSection, key, type, value, 0, 100);
+                }
             }
+        }
+
+        const firstPage = Object.keys(this.configData)[0];
+        if (firstPage) this.ui.openTab(firstPage);
+    }
+
+    // Carrega dados da API e repassa para o parser
+    async loadConfig() {
+        try {
+            const iniText = await this.api.fetchConfig();
+            this.parseAndBuildINI(iniText);
         } catch (err) {
-            console.error("Erro ao enviar configurações para a API:", err);
+            console.error("Erro ao carregar o arquivo:", err);
+        }
+    }
+
+    // Coleta dados da UI e envia para a API
+    async saveConfig() {
+        try {
+            const iniOutput = this.ui.generateINIText();
+            await this.api.saveConfig(iniOutput);
+            console.log("Configurações salvas com sucesso!");
+        } catch (err) {
+            console.error("Erro ao enviar configurações:", err);
+        }
+    }
+
+    // Configura eventos de encerramento
+    initAutoShutdown() {
+        window.addEventListener("pagehide", () => this.api.sendShutdown("18080"));
+        window.addEventListener("beforeunload", () => this.api.sendShutdown("17104"));
+    }
+}
+
+function main(DevMode) {
+    const settings = new SettingsManager();
+
+    if (DevMode) {
+        
+    } else {
+        settings.loadConfig();
+
+        const saveBtn = document.getElementById("mySaveButton");
+        if (saveBtn) {
+            saveBtn.onclick = () => settings.saveConfig();
         }
     }
 }
 
-// Inicializa e carrega a interface
-const settings = new Settings();
-settings.loadConfigFromAPI();
-
-// Envia um aviso para fechar o backend ao fechar a aba/janela
-window.addEventListener("beforeunload", () => {
-    navigator.sendBeacon("http://localhost:17104/api/shutdown");
-});
+main(true)
